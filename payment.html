@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Transaction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            width: 350px;
+            margin: auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #success-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 10px auto;
+            display: block;
+        }
+        #download-btn {
+            display: none;
+            background: #007bff;
+        }
+        #download-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Payment Transaction</h2>
+        <label>Enter Amount:</label>
+        <input type="number" id="amount" placeholder="Enter amount">
+        
+        <h3>Scan QR Code</h3>
+        <img src="qr.jpg" id="qr-code" alt="QR Code">
+
+        <button onclick="completePayment()">Send Payment</button>
+
+        <p id="success-message">Payment Transaction Successful!</p>
+
+        <button id="download-btn" onclick="generateReceipt()">Download Receipt</button>
+    </div>
+
+    <script>
+        function completePayment() {
+            let amount = document.getElementById("amount").value;
+            if (amount === "" || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+
+            document.getElementById("success-message").style.display = "block";
+            document.getElementById("download-btn").style.display = "block";
+        }
+
+        function generateReceipt() {
+            let amount = document.getElementById("amount").value;
+            let date = new Date().toLocaleString();
+            let transactionId = "TXN" + Math.floor(Math.random() * 1000000000); // Generate random transaction ID
+            
+            let receiptContent = `
+                <html>
+                <head>
+                    <title>Payment Receipt</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+                        .receipt-container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+                        h2 { color: #28a745; }
+                        .details { text-align: left; margin-top: 20px; }
+                        .details p { margin: 5px 0; }
+                        button { background: #007bff; color: white; padding: 10px; border: none; cursor: pointer; margin-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt-container">
+                        <h2>Payment Receipt</h2>
+                        <hr>
+                        <div class="details">
+                            <p><strong>Transaction ID:</strong> ${transactionId}</p>
+                            <p><strong>Amount Paid:</strong> $${amount}</p>
+                            <p><strong>Date & Time:</strong> ${date}</p>
+                            <p><strong>Payment Status:</strong> Successful</p>
+                        </div>
+                        <button onclick="window.print()">Download PDF</button>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            let receiptWindow = window.open("", "_blank");
+            receiptWindow.document.write(receiptContent);
+            receiptWindow.document.close();
+        }
+    </script>
+
+</body>
+</html>

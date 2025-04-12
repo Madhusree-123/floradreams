@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://wallpapercave.com/wp/wp2885087.jpg') no-repeat center center/cover;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: hwb(50 69% 6%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 98%;
+            top: 0;
+            left: 0;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            font-weight: bold;
+            color: #242124;
+            text-shadow: 2px 2px 4px #4e2456;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 40px;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navbar .nav-links img {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .navbar .nav-links img:hover {
+            transform: scale(1.2);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* Slideshow Banner */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            margin-top: 60px; /* Space for top alignment */
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .container {
+            text-align: center;
+            color: black;
+            margin-top: 20px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 15px;
+            width: 200px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+            height:200px;
+        }
+        .slideshow-container {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+    }
+
+    .slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+
+    .slide.active {
+        opacity: 1;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 150%;
+        object-fit: cover;
+    }
+
+    /* Navigation Dots */
+    .dots-container {
+        position: absolute;
+        bottom: 15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .dot {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin: 0 5px;
+        background-color: #bbb;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .dot.active {
+        background-color: #717171;
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+        <div>Flora Dream 	</div>
+        </div>
+        <ul class="nav-links">
+            <li onclick="window.location.href='cart.html';">
+                <a>
+                    <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="Cart">
+                </a>
+            </li>
+            <li onclick="window.location.href='contact.html';">
+                <a>
+                    <img src="https://cdn-icons-png.flaticon.com/512/1827/1827342.png" alt="Contact">
+                </a>
+            </li>
+            <li>
+                <a href="profile.html">
+                    <img src="https://cdn-icons-png.flaticon.com/512/219/219969.png" alt="Profile">
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="logoutUser()" class="logout">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828479.png" alt="Logout">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Slideshow -->
+<div class="slideshow-container">
+    <div class="slide active">
+        <img src="https://cdn.igp.com/f_auto,q_auto,t_pnopt32prodlp/banners/hamper_d_igp_banner_20230628.jpg" alt="Flower Slide 1">
+    </div>
+    <div class="slide">
+        <img src="https://cdn.igp.com/f_auto,q_auto,t_pnopt32prodlp/banners/birthday_d_igp_banner_20230628.jpg" alt="Flower Slide 2">
+    </div>
+    <div class="slide">
+        <img src="https://cdn.igp.com/f_auto,q_auto,t_pnopt32prodlp/banners/luxe_d_igp_banner_20230628.jpg" alt="Flower Slide 3">
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="dots-container">
+        <span class="dot active" onclick="currentSlide(0)"></span>
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+    </div>
+</div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Welcome to Your Flower Shop Dashboard</h1>
+        <h2>Our Best Selling Flowers</h2>
+
+        <div class="products">
+            <div class="product" onclick="window.location.href='roses.html';" style="cursor: pointer;">
+                <img src="https://th.bing.com/th?id=OIP.cNYKfHmIU6kyOwa4cg7TggHaHb&w=249&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2" alt="Roses">
+                <h3>Roses</h3>
+            </div>
+
+            <div class="product" onclick="window.location.href='orchids.html';" style="cursor: pointer;">
+                <img src="https://tse1.mm.bing.net/th?id=OIP.1gyZgn4wvF75pQfC7ubokAHaE6&pid=Api&P=0&h=180" alt="Roses">
+                <h3>Orchids</h3>
+            </div>
+
+            <div class="product" onclick="window.location.href='cartination.html';" style="cursor: pointer;">
+                <img src="https://tse2.mm.bing.net/th?id=OIP.cyGOg-zxm2hY9hYtojyGqwHaE8&pid=Api&P=0&h=180" alt="Sunflowers">
+                <h3>Carnations</h3>
+            </div>
+            <div class="product" onclick="window.location.href='lilies.html';" style="cursor: pointer;">
+                <img src="https://tse3.mm.bing.net/th?id=OIP.9t2TC_hkem4Hov_GYQ5PrgHaEo&pid=Api&P=0&h=180" alt="Jasmine">
+                <h3>Lilies</h3>
+            </div>
+            <div class="product" onclick="window.location.href='gerberas.html';" style="cursor: pointer;">
+                <img src="https://tse3.mm.bing.net/th?id=OIP.VaRENGNA7th4aeziPZNCxgHaEr&pid=Api&P=0&h=180" alt="Sunflowers">
+                <h3>Gerberas</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Slideshow Functionality
+        let slides = document.querySelectorAll(".slide");
+    let dots = document.querySelectorAll(".dot");
+    let index = 0;
+
+    function showSlide(n) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle("active", i === n);
+            dots[i].classList.toggle("active", i === n);
+        });
+    }
+
+    function nextSlide() {
+        index = (index + 1) % slides.length;
+        showSlide(index);
+    }
+
+    function currentSlide(n) {
+        index = n;
+        showSlide(index);
+    }
+
+    setInterval(nextSlide, 3000);
+        </script>
+        <script>
+    function logoutUser() {
+        // Clear session and local storage
+        sessionStorage.clear();
+        localStorage.removeItem("userToken");
+
+        // Show logout confirmation
+        alert("You have been logged out successfully.");
+
+        // Redirect to login page
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>

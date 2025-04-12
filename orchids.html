@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://wallpapercave.com/wp/wp2885087.jpg') no-repeat center center/cover;
+            height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        .container {
+            text-align: center;
+            color: black;
+            margin-top: 20px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 15px;
+            width: 200px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .wishlist {
+            color: gray;
+            transition: color 0.3s;
+        }
+
+        .wishlist.active {
+            color: #ff66b2;
+        }
+
+        .cart-btn {
+            color: green;
+        }
+
+        .share-btn {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>ORCHIDS</h2>
+        <div class="products" id="productList"></div>
+    </div>
+
+    <script>
+        const products = [
+    { "name": "Pink Orchid Bouquet", "price": 18.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1729929479697-13738.webp&w=600&q=75" },
+    { "name": "Red Orchid", "price": 11.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12854_67_12854.webp&w=600&q=75" },
+    { "name": "Yellow Orchids & Purple Orchids Bouquet", "price": 14.79, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FYellowRosesPurpleOrchidsBouquet-1735625648886.webp&w=600&q=75" },
+    { "name": "Exotic Orchid Arrangement", "price": 19.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1729496440528-12828.webp&w=600&q=75" },
+    { "name": "White & Purple Orchid Mix", "price": 16.89, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13592_60_13592.webp&w=600&q=75" },
+    { "name": "Bouquet of Purple Orchids", "price": 12.39, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F1688545269_Bouquet_of_Purple_Orchids.png&w=600&q=75" },
+    { "name": "Orchid Floral Basket", "price": 20.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F133_19_133.webp&w=600&q=75" },
+    { "name": "White Orchids in Glass Vase", "price": 17.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1730101177680-13563WhiteOrchidsinaGlassVase.webp&w=600&q=75" },
+    { "name": "Elegant Purple Orchids", "price": 14.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13590_29_13590.webp&w=600&q=75" },
+    { "name": "Orchid Delight Bouquet", "price": 13.29, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12823_89_12823.webp&w=600&q=75" },
+    { "name": "White Orchid Bouquet", "price": 15.79, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12836_56_12836.webp&w=600&q=75" },
+    { "name": "Orchid Bouquet with Cake & Chocolate", "price": 22.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1730106469129-OrchidBouquetWithCakeChocolate.webp&w=600&q=75" },
+    { "name": "Fresh Orchid Arrangement", "price": 13.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1730094064694-13909.webp&w=600&q=75" },
+    { "name": "Orchid Bloom Basket", "price": 21.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F5986_51_5986.webp&w=600&q=75" },
+    { "name": "Radiant Orchid Blossoms", "price": 18.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F14212_68_14212.webp&w=600&q=75" }
+]
+     const usdToInr = 83;
+        function renderProducts() {
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+
+            products.forEach((product, index) => {
+                const priceInr = (product.price * usdToInr).toFixed(2);
+                productList.innerHTML += `
+                    <div class="product">
+                        <img src="${product.img}" alt="${product.name}" onclick="goToOrder(${index})">
+                        <h3>${product.name}</h3>
+                        <p class="price">₹${priceInr}</p>
+                        <div class="buttons">
+                            <button class="btn wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                            <button class="btn share-btn" onclick="shareProduct('${product.img}')">&#128279;</button>
+                            <button class="btn cart-btn" onclick="addToCart(${index})">🛒</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function goToOrder(index) {
+            localStorage.setItem("selectedProduct", JSON.stringify(products[index]));
+            window.location.href = "order.html";
+        }
+
+        function toggleWishlist(button) {
+            button.classList.toggle("active");
+        }
+
+        function shareProduct(imgUrl) {
+            navigator.clipboard.writeText(imgUrl);
+            alert("Product link copied to clipboard!");
+        }
+
+        function addToCart(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push(products[index]);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Item added to cart!");
+        }
+
+        renderProducts();
+    </script>
+
+</body>
+</html>

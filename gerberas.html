@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://wallpapercave.com/wp/wp2885087.jpg') no-repeat center center/cover;
+            height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        .container {
+            text-align: center;
+            color: black;
+            margin-top: 20px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 15px;
+            width: 200px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .wishlist {
+            color: gray;
+            transition: color 0.3s;
+        }
+
+        .wishlist.active {
+            color: #ff66b2;
+        }
+
+        .cart-btn {
+            color: green;
+        }
+
+        .share-btn {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>GERBERAS</h2>
+        <div class="products" id="productList"></div>
+    </div>
+
+    <script>
+        const products = [
+  { "name": "Gerbera Bouquet", "price": 15.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F40_68_40.webp&w=600&q=75" },
+  { "name": "Yellow Gerberas", "price": 12.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FCharmingBouquetofYellowGerberas-1733822913128.webp&w=600&q=75" },
+  { "name": "Mixed Gerbera Bouquet", "price": 10.75, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FYellowPinkFlowersBouquet-1733911606168.webp&w=600&q=75" },
+  { "name": "Bright Gerbera Mix", "price": 13.89, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2FMixGerberasBouquet-1730117657524.webp&w=600&q=75" },
+  { "name": "Elegant Gerbera Arrangement", "price": 16.50, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13665_92_13665.webp&w=600&q=75" },
+  { "name": "Vibrant Gerberas", "price": 11.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13703_75_13703.webp&w=600&q=75" },
+  { "name": "Pink Gerbera Bliss", "price": 14.29, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F14055_42_14055.webp&w=600&q=75" },
+  { "name": "Sunny Gerbera Delight", "price": 12.79, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12841_80_12841.webp&w=600&q=75" },
+  { "name": "Colorful Gerbera Set", "price": 10.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1730100687373-13869.webp&w=600&q=75" },
+  { "name": "Red Gerbera Bouquet", "price": 15.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FElegantBouquetofRedGerberas-1735626265361.webp&w=600&q=75" },
+  { "name": "Exquisite Gerberas", "price": 13.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F15723_29_15723.png&w=600&q=75" },
+  { "name": "Fresh Gerbera Bouquet", "price": 11.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1730112460499-13941.webp&w=600&q=75" },
+  { "name": "Blushing Gerberas", "price": 10.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12234_51_12234.webp&w=600&q=75" },
+  { "name": "Graceful Gerberas", "price": 14.79, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13603_81_13603.webp&w=600&q=75" },
+  { "name": "Gerbera Spray Carnations", "price": 14.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FGerberasSprayCarnationsBouquet-1735625997970.webp&w=600&q=75" }
+]
+
+         const usdToInr = 83;
+        function renderProducts() {
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+
+            products.forEach((product, index) => {
+                const priceInr = (product.price * usdToInr).toFixed(2);
+                productList.innerHTML += `
+                    <div class="product">
+                        <img src="${product.img}" alt="${product.name}" onclick="goToOrder(${index})">
+                        <h3>${product.name}</h3>
+                        <p class="price">₹${priceInr}</p>
+                        <div class="buttons">
+                            <button class="btn wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                            <button class="btn share-btn" onclick="shareProduct('${product.img}')">&#128279;</button>
+                            <button class="btn cart-btn" onclick="addToCart(${index})">🛒</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function goToOrder(index) {
+            localStorage.setItem("selectedProduct", JSON.stringify(products[index]));
+            window.location.href = "order.html";
+        }
+
+        function toggleWishlist(button) {
+            button.classList.toggle("active");
+        }
+
+        function shareProduct(imgUrl) {
+            navigator.clipboard.writeText(imgUrl);
+            alert("Product link copied to clipboard!");
+        }
+
+        function addToCart(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push(products[index]);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Item added to cart!");
+        }
+
+        renderProducts();
+    </script>
+
+</body>
+</html>

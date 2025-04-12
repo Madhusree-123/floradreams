@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://wallpapercave.com/wp/wp2885087.jpg') no-repeat center center/cover;
+            height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        .container {
+            text-align: center;
+            color: black;
+            margin-top: 20px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 15px;
+            width: 200px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .wishlist {
+            color: gray;
+            transition: color 0.3s;
+        }
+
+        .wishlist.active {
+            color: #ff66b2;
+        }
+
+        .cart-btn {
+            color: green;
+        }
+
+        .share-btn {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>CARNATIONS</h2>
+        <div class="products" id="productList"></div>
+    </div>
+
+    <script>
+        const products = [
+    { "name": "Pink Carnations in a Basket", "price": 18.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FPinkCarnationsinaBasket-1733814278971.webp&w=600&q=75" },
+    { "name": "Charming Pink Carnations", "price": 11.25, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13568_33_13568.webp&w=600&q=75" },
+    { "name": "Pure Elegance White Carnation Bouquet", "price": 14.75, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FPureEleganceWhiteCarnationBouquet-1733823245501.webp&w=600&q=75" },
+    { "name": "Pretty in Pink Carnation Bouquet", "price": 13.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FPrettyinPinkCarnationBouquet2-1733910542486.webp&w=600&q=75" },
+    { "name": "Elegant Pink Carnation Bouquet", "price": 16.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1729925458181-13677.webp&w=600&q=75" },
+    { "name": "White & Pink Carnations Bouquet", "price": 9.85, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1729928926146-13693.webp&w=600&q=75" },
+    { "name": "Vibrant Carnation Bouquet", "price": 17.29, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F13696_22_13696.webp&w=600&q=75" },
+    { "name": "Red & White Carnation Bouquet", "price": 12.49, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F6140_66_6140.webp&w=600&q=75" },
+    { "name": "Blushing Carnation Delight", "price": 14.35, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FOCT2024%2F1730094231477-13953.webp&w=600&q=75" },
+    { "name": "Sweetheart Carnation Bouquet", "price": 11.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F8901_92_8901.webp&w=600&q=75" },
+    { "name": "Pastel Carnation Charm", "price": 10.59, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F8913_68_8913.webp&w=600&q=75" },
+    { "name": "Graceful Carnation Bouquet", "price": 13.79, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F8916_78_8916.webp&w=600&q=75" },
+    { "name": "Elegant White Carnations", "price": 9.99, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12219_63_12219.webp&w=600&q=75" },
+    { "name": "Pink & White Carnations Bouquet", "price": 15.25, "img": "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FPinkWhiteCarnationsBouquet-1733923089985.webp&w=600&q=75" }
+]
+      const usdToInr = 83;
+        function renderProducts() {
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+
+            products.forEach((product, index) => {
+                const priceInr = (product.price * usdToInr).toFixed(2);
+                productList.innerHTML += `
+                    <div class="product">
+                        <img src="${product.img}" alt="${product.name}" onclick="goToOrder(${index})">
+                        <h3>${product.name}</h3>
+                        <p class="price">₹${priceInr}</p>
+                        <div class="buttons">
+                            <button class="btn wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                            <button class="btn share-btn" onclick="shareProduct('${product.img}')">&#128279;</button>
+                            <button class="btn cart-btn" onclick="addToCart(${index})">🛒</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function goToOrder(index) {
+            localStorage.setItem("selectedProduct", JSON.stringify(products[index]));
+            window.location.href = "order.html";
+        }
+
+        function toggleWishlist(button) {
+            button.classList.toggle("active");
+        }
+
+        function shareProduct(imgUrl) {
+            navigator.clipboard.writeText(imgUrl);
+            alert("Product link copied to clipboard!");
+        }
+
+        function addToCart(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push(products[index]);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Item added to cart!");
+        }
+
+        renderProducts();
+    </script>
+
+</body>
+</html>

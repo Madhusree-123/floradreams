@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://wallpapercave.com/wp/wp2885087.jpg') no-repeat center center/cover;
+            height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        .container {
+            text-align: center;
+            color: black;
+            margin-top: 20px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .product {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 15px;
+            width: 200px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .wishlist {
+            color: gray;
+            transition: color 0.3s;
+        }
+
+        .wishlist.active {
+            color: #ff66b2;
+        }
+
+        .cart-btn {
+            color: green;
+        }
+
+        .share-btn {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>ROSES</h2>
+        <div class="products" id="productList"></div>
+    </div>
+
+    <script>
+        const products = [
+            { name: "Rose", price: 15.99, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F15764_91_15764.webp&w=600&q=75" },
+            { name: "Pink Rose", price: 12.49, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F14426_44_14426.webp&w=600&q=75" },
+            { name: "Yellow Roses", price: 13.99, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FRedYellowRosesinaBasket-1733825563817.png&w=600&q=75" },
+            { name: "Basket of Roses", price: 18.49, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F166_23_166.webp&w=600&q=75" },
+            { name: "Fresh Blooms", price: 16.99, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F14548_90_14548.webp&w=600&q=75" },
+            { name: "Blooming Basket", price: 14.29, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F12845_14_12845.webp&w=600&q=75" },
+            { name: "Elegant Bouquet", price: 19.79, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F14437_56_14437.webp&w=600&q=75" },
+            { name: "5 Roses Special", price: 11.99, img: "https://cdn.bloomsflora.com/uploads/product/bloomsflora/5-5_57_15742.png" },
+            { name: "Premium Blooms", price: 17.39, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F14757_25_14757.webp&w=600&q=75" },
+            { name: "Romantic Roses", price: 20.49, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F164_46_164.png&w=600&q=75" },
+            { name: "Classic Red Roses", price: 14.99, img: "https://cdn.bloomsflora.com/uploads/product/bloomsflora/14267_68_14267.webp" },
+            { name: "Sunshine Yellow Roses", price: 16.49, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FYellowRosesinaBasket-1733814605906.webp&w=600&q=75" },
+            { name: "Pink Love Roses", price: 21.99, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2FDEC2024%2FBabyPinkRosesinaBasket-1733895439395.webp&w=600&q=75" },
+            { name: "Deluxe Rose Bouquet", price: 15.49, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F6147_74_6147.webp&w=600&q=75" },
+            { name: "Golden Bloom", price: 22.99, img: "https://www.bloomsflora.com/_next/image?url=https%3A%2F%2Fcdn.bloomsflora.com%2Fuploads%2Fproduct%2Fbloomsflora%2F11-(30-yellow)_67_14073.webp&w=600&q=75" }
+        ];
+
+         const usdToInr = 83;// Example conversion rate
+
+        function renderProducts() {
+            const productList = document.getElementById("productList");
+            productList.innerHTML = "";
+
+            products.forEach((product, index) => {
+                const priceInr = (product.price * usdToInr).toFixed(2);
+                productList.innerHTML += `
+                    <div class="product">
+                        <img src="${product.img}" alt="${product.name}" onclick="goToOrder(${index})">
+                        <h3>${product.name}</h3>
+                        <p class="price">₹${priceInr}</p>
+                        <div class="buttons">
+                            <button class="btn wishlist" onclick="toggleWishlist(this)">&#9825;</button>
+                            <button class="btn share-btn" onclick="shareProduct('${product.img}')">&#128279;</button>
+                            <button class="btn cart-btn" onclick="addToCart(${index})">🛒</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function goToOrder(index) {
+            localStorage.setItem("selectedProduct", JSON.stringify(products[index]));
+            window.location.href = "order.html";
+        }
+
+        function toggleWishlist(button) {
+            button.classList.toggle("active");
+        }
+
+        function shareProduct(imgUrl) {
+            navigator.clipboard.writeText(imgUrl);
+            alert("Product link copied to clipboard!");
+        }
+
+        function addToCart(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push(products[index]);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Item added to cart!");
+        }
+
+        renderProducts();
+    </script>
+
+</body>
+</html>

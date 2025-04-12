@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop - Order Details</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://wallpapercave.com/wp/wp2885087.jpg') no-repeat center center/cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 2000px;
+        }
+
+        .container {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            width: 0;
+            max-width: 1000px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transform: rotateY(-90deg);
+            transition: all 1s ease;
+            opacity: 0;
+        }
+
+        .container.open {
+            width: 80vw;
+            opacity: 1;
+            transform: rotateY(0deg);
+        }
+
+        .product-detail {
+            flex: 1;
+            padding: 20px;
+            height: 600px;
+            border-right: 1px solid #ccc;
+            backface-visibility: hidden;
+        }
+
+        .order-section {
+            flex: 1;
+            padding: 20px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            backface-visibility: hidden;
+        }
+
+        .product-detail img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 24px;
+            padding-top: 20px;
+            cursor: pointer;
+        }
+
+        .order-form input {
+            width: 90%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .order-form button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .order-form .payment-button {
+            background: #FF5722;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="bookContainer">
+        <div class="product-detail" id="productDetail">
+            <h2>Product Details</h2>
+            <p>Loading...</p>
+        </div>
+
+        <div class="order-section" id="orderSection">
+            <h2>Order Details</h2>
+            <form id="orderForm" class="order-form">
+                <input type="text" id="customerName" placeholder="Customer Name" required>
+                <input type="text" id="productId" placeholder="Product ID" readonly>
+                <input type="text" id="address" placeholder="Address" required>
+                <input type="text" id="city" placeholder="City" required>
+                <input type="text" id="pincode" placeholder="Pincode" required>
+                <input type="text" id="phone" placeholder="Phone Number" required>
+                <button type="button" onclick="calculateDeliveryCharge()">Calculate Delivery Charge</button>
+                <button type="button" onclick="placeOrder()">Place Order</button>
+                <button type="button" class="payment-button" onclick="proceedToPayment()">Proceed to Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function() {
+            const bookContainer = document.getElementById("bookContainer");
+            setTimeout(() => {
+                bookContainer.classList.add("open");
+            }, 200);
+        });
+
+        function generateProductId() {
+            return 'PID-' + Math.floor(100000 + Math.random() * 900000);
+        }
+
+        let selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
+
+        if (selectedProduct) {
+            const randomProductId = generateProductId();
+            document.getElementById("productId").value = randomProductId;
+
+            document.getElementById("productDetail").innerHTML = `
+                <img src="${selectedProduct.img}" alt="${selectedProduct.name}">
+                <h2>${selectedProduct.name}</h2>
+                <p>A beautiful bouquet of ${selectedProduct.name}, perfect for any occasion.</p>
+                <h3>Price: ₹${(selectedProduct.price * 83).toFixed(2)}</h3>
+                <h4 id="deliveryCharge">Delivery Charge: Calculating...</h4>
+                <h3 id="totalPrice">Total Price: ₹${(selectedProduct.price * 83).toFixed(2)}</h3>
+            `;
+        } else {
+            document.getElementById("productDetail").innerHTML = `<p>No product selected.</p>`;
+        }
+
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function calculateDeliveryCharge() {
+            const shopLat = 12.9716;
+            const shopLon = 77.5946;
+            const city = document.getElementById("city").value;
+
+            if (!city) {
+                alert("Please enter a city to calculate delivery charge.");
+                return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?city=${city}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const userLat = parseFloat(data[0].lat);
+                        const userLon = parseFloat(data[0].lon);
+                        const distance = haversineDistance(shopLat, shopLon, userLat, userLon);
+                        const deliveryCharge = Math.max(50, distance * 10);
+
+                        document.getElementById("deliveryCharge").innerText = `Delivery Charge: ₹${deliveryCharge.toFixed(2)}`;
+                        const totalPrice = (selectedProduct.price * 83) + deliveryCharge;
+                        document.getElementById("totalPrice").innerText = `Total Price: ₹${totalPrice.toFixed(2)}`;
+                    } else {
+                        alert("Could not find the city. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    alert('Failed to calculate delivery charge. Please try again.');
+                    console.error('Error:', error);
+                });
+        }
+
+        function placeOrder() {
+            const customerName = document.getElementById("customerName").value;
+            const productId = document.getElementById("productId").value;
+            const address = document.getElementById("address").value;
+            const city = document.getElementById("city").value;
+            const pincode = document.getElementById("pincode").value;
+            const phone = document.getElementById("phone").value;
+            const deliveryChargeText = document.getElementById("deliveryCharge").innerText;
+            const totalPriceText = document.getElementById("totalPrice").innerText;
+
+            const deliveryCharge = parseFloat(deliveryChargeText.replace(/[^0-9.]/g, ''));
+            const totalPrice = parseFloat(totalPriceText.replace(/[^0-9.]/g, ''));
+
+            if (!customerName || !address || !city || !pincode || !phone) {
+                alert("Please fill all required fields.");
+                return;
+            }
+
+            const orderData = {
+                customer_name: customerName,
+                product_id: productId,
+                address: address,
+                city: city,
+                pincode: pincode,
+                phone: phone,
+                delivery_charge: deliveryCharge,
+                total_price: totalPrice
+            };
+
+            fetch("order.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Order placed successfully!");
+                    document.getElementById("orderForm").reset();
+                } else {
+                    alert("Error placing order: " + data.message);
+                }
+            })
+            .catch(error => {
+                alert("Failed to place order. Please try again.");
+                console.error("Error:", error);
+            });
+        }
+
+        function proceedToPayment() {
+            const totalPriceText = document.getElementById("totalPrice").innerText;
+            const totalPrice = parseFloat(totalPriceText.replace(/[^0-9.]/g, ''));
+            localStorage.setItem("paymentAmount", totalPrice);
+            window.location.href = "payment.html";
+        }
+    </script>
+</body>
+</html>
